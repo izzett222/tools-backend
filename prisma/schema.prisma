@@ -44,6 +44,8 @@ model Tool {
   user        User     @relation(fields: [userId], references: [id])
   userId      Int
   lists       List[]
+
+  @@unique([userId, name])
 }
 
 model Tag {
@@ -54,4 +56,6 @@ model Tag {
   tool      Tool[]
   user      User     @relation(fields: [userId], references: [id])
   userId    Int
+
+  @@unique([userId, name])
 }

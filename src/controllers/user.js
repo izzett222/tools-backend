@@ -60,4 +60,21 @@ export default class UserController {
       },
     });
   }
+
+  static async getUser(req, res) {
+    try {
+      const { user } = req;
+      return res.status(200).json({
+        message: 'user found',
+        data: {
+          username: user.username,
+          id: user.id,
+        },
+      });
+    } catch (error) {
+      return res.status(500).json({
+        message: 'server error',
+      });
+    }
+  }
 }
