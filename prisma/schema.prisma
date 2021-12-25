@@ -14,15 +14,23 @@ model User {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  username  String   @db.VarChar(255) @unique
+  username  String   @unique @db.VarChar(255)
   password  String   @db.VarChar(255)
   tools     Tool[]
+  lists     List[]
+  tags      Tag[]
 }
 
 model List {
-  id          Int      @id @default(autoincrement())
-  name String
-  tools Tool[]
+  id        Int      @id @default(autoincrement())
+  name      String
+  tools     Tool[]
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, name])
 }
 
 model Tool {
@@ -43,5 +51,7 @@ model Tag {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   name      String   @db.VarChar(255)
-  tool Tool[]
+  tool      Tool[]
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
 }

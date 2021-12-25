@@ -21,7 +21,10 @@ export default class UserController {
       },
 
     });
-    const token = jwt.sign({ username: createdUser, id: createdUser.id }, process.env.JSON_SECRET);
+    const token = jwt.sign({
+      username: createdUser.username,
+      id: createdUser.id,
+    }, process.env.JSON_SECRET);
     return res.status(201).json({
       message: 'user created successfully',
       data: {
@@ -45,7 +48,10 @@ export default class UserController {
         message: 'Wrong username or password',
       });
     }
-    const token = jwt.sign({ username: user, id: user.id }, process.env.JSON_SECRET);
+    const token = jwt.sign({
+      username: user.username,
+      id: user.id,
+    }, process.env.JSON_SECRET);
     return res.status(200).json({
       message: 'user logged in successfully',
       data: {
