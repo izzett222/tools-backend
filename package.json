@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon --exec babel-node src/index"
+    "dev": "nodemon --exec babel-node src/index",
+    "build": "rm -rf ./build && babel ./src/. --out-dir build --copy-files && prisma generate && prisma migrate deploy",
+    "start": "node build/index"
   },
   "repository": {
     "type": "git",
@@ -19,6 +21,7 @@
   },
   "homepage": "https://github.com/izzett222/tools-backend#readme",
   "dependencies": {
+    "@babel/runtime": "^7.16.5",
     "@prisma/client": "^3.7.0",
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.1",
@@ -31,9 +34,12 @@
     "prisma": "3.6.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.16.0",
     "@babel/core": "^7.16.5",
     "@babel/eslint-parser": "^7.16.5",
     "@babel/node": "^7.16.5",
+    "@babel/plugin-transform-runtime": "^7.16.5",
+    "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.16.5",
     "eslint": "^8.5.0",
     "eslint-config-airbnb-base": "^15.0.0",
