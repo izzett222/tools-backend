@@ -14,20 +14,25 @@ export default class ToolsController {
           create: { name: tag, userId: user.id },
         })),
       };
+      const listObj = lists === 'All my tools' ? undefined : {
+        connectOrCreate: {
+          where:
+            { userId_name: { name: lists, userId: user.id } },
+          create: { name: lists, userId: user.id },
+        },
+      };
       const createdTool = await prisma.tool.create({
         data: {
           name,
           description,
           link,
-          lists: {
-            connectOrCreate: {
-              where:
-                { userId_name: { name: lists, userId: user.id } },
-              create: { name: lists, userId: user.id },
-            },
-          },
+          lists: listObj,
           tags: tagsObj,
           user: { connect: { id: user.id } },
+        },
+        include: {
+          tags: true,
+          lists: true,
         },
       });
       return res.status(201).json({
@@ -35,6 +40,7 @@ export default class ToolsController {
         data: createdTool,
       });
     } catch (error) {
+      console.log(error);
       if (error.message.includes('Unique constraint failed on the fields: (`userId`,`name`)')) {
         return res.status(403).json({
           message: 'The tool already exist',
@@ -49,9 +55,16 @@ export default class ToolsController {
   static async getAllTools(req, res) {
     try {
       const { user } = req;
+      const { list } = req.query;
       const tools = await prisma.tool.findMany({
         where: {
           userId: user.id,
+          lists: {
+            some: {
+              name: list === 'All my tools' ? undefined : list,
+            },
+
+          },
         },
         include: {
           lists: true,
