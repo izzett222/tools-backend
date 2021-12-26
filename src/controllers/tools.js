@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ log: ['query'] });
 export default class ToolsController {
   static async create(req, res) {
     try {
@@ -55,13 +55,14 @@ export default class ToolsController {
   static async getAllTools(req, res) {
     try {
       const { user } = req;
-      const { list } = req.query;
+      const queryString = new URLSearchParams(req.query);
+      const list = queryString.get('list');
       const tools = await prisma.tool.findMany({
         where: {
           userId: user.id,
-          lists: {
+          lists: list === 'All my tools' ? undefined : {
             some: {
-              name: list === 'All my tools' ? undefined : list,
+              name: list,
             },
 
           },
